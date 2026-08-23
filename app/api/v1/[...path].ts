@@ -32,7 +32,8 @@ function json(res: DemoResponse, status: number, body: unknown): void {
 export default async function handler(req: DemoRequest, res: DemoResponse): Promise<void> {
   // /api/v1/<seg>/<...> — the Vercel catch-all param arrives on req.query,
   // but url parsing needs no Vercel types.
-  const segs = (req.url ?? '').split('?')[0].split('/').filter(Boolean).slice(2) // drop api/v1
+  const path = (req.url ?? '').split('?')[0] ?? '/'
+  const segs = path.split('/').filter(Boolean).slice(2) // drop api/v1
   try {
     const doc = await world()
 
@@ -52,7 +53,7 @@ export default async function handler(req: DemoRequest, res: DemoResponse): Prom
     }
 
     if (segs[0] === 'worlds' && segs.length >= 2) {
-      const id = decodeURIComponent(segs[1])
+      const id = decodeURIComponent(segs[1] ?? '')
       if (id !== doc['id']) { json(res, 404, { detail: `no such world: ${id}` }); return }
 
       if (req.method === 'GET' && segs.length === 2) { json(res, 200, doc); return }

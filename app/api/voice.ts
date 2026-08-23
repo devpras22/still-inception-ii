@@ -5,14 +5,15 @@
  * substance: {text, reference_id?} in, audio/mpeg out. The client is the
  * studio's speakViaBridge; the fish key never touches the browser.
  */
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { DemoRequest, DemoResponse } from './types'
 
-export default async function voice(req: VercelRequest, res: VercelResponse): Promise<void> {
+export default async function voice(req: DemoRequest, res: DemoResponse): Promise<void> {
   if (req.method !== 'POST') { res.status(405).json({ detail: 'POST only' }); return }
-  const key = (process.env.FISH_AUDIO_API_KEY ?? '').trim()
+  const key = (process.env['FISH_AUDIO_API_KEY'] ?? '').trim()
   if (!key) { res.status(503).json({ detail: 'voice not configured' }); return }
-  const text = typeof req.body?.text === 'string' ? req.body.text : ''
-  const referenceId = typeof req.body?.reference_id === 'string' ? req.body.reference_id : undefined
+  const body = (req.body ?? {}) as { text?: unknown; reference_id?: unknown }
+  const text = typeof body.text === 'string' ? body.text : ''
+  const referenceId = typeof body.reference_id === 'string' ? body.reference_id : undefined
   if (!text.trim()) { res.status(400).json({ detail: 'text required' }); return }
 
   try {

@@ -6,11 +6,11 @@
  * api.openai.com, and this function swaps the placeholder auth for the real
  * key held in the Vercel environment. The browser never sees an OpenAI key.
  */
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { DemoRequest, DemoResponse } from '../../types'
 
-export default async function completions(req: VercelRequest, res: VercelResponse): Promise<void> {
+export default async function completions(req: DemoRequest, res: DemoResponse): Promise<void> {
   if (req.method !== 'POST') { res.status(405).json({ detail: 'POST only' }); return }
-  const key = (process.env.OPENAI_API_KEY ?? '').trim()
+  const key = (process.env['OPENAI_API_KEY'] ?? '').trim()
   if (!key) { res.status(503).json({ detail: 'llm not configured' }); return }
 
   try {

@@ -8,10 +8,10 @@
  * inherent to a browser-side world model and the reason every key used by
  * this demo should be rotated after the hackathon.
  */
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { DemoRequest, DemoResponse } from './types'
 
-export default function config(req: VercelRequest, res: VercelResponse): void {
+export default function config(req: DemoRequest, res: DemoResponse): void {
   if (req.method !== 'GET') { res.status(405).json({ detail: 'GET only' }); return }
-  const reactorKey = (process.env.REACTOR_API_KEY ?? '').trim()
+  const reactorKey = (process.env['REACTOR_API_KEY'] ?? '').trim()
   res.status(200).json({ deployed: reactorKey.length > 0, ...(reactorKey ? { reactorKey } : {}) })
 }
