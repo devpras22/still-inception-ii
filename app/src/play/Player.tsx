@@ -2105,7 +2105,7 @@ export function PlayModal({
                 and one sentence on the left, the event it was made for on the
                 right. The world id and provider are authoring facts. */}
             <strong>{worldRef.current?.name ?? 'STILL'}</strong>
-            <span className="film-tag">{(worldRef.current?.['tagline'] as string | undefined) ?? ''}</span>
+            <span className="film-tag">every photograph you pick up comes alive</span>
           </>
         ) : (
           <>
