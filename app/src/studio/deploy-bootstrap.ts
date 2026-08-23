@@ -24,6 +24,12 @@
 /** The store key the provider registry reads at mount (see registry.ts). */
 const PROVIDERS_KEY = 'alakazam-studio:providers:v1'
 
+/** True once the bootstrap has talked to a deployment's /api/config — the
+ *  app reads this to lock the experience into a cinema: no way back to the
+ *  authoring studio, whose Settings would display the keys it installed. */
+let deployedDemo = false
+export function isDeployedDemo(): boolean { return deployedDemo }
+
 interface DeployConfig {
   deployed: boolean
   reactorKey?: string
@@ -43,6 +49,7 @@ async function fetchDeployConfig(): Promise<DeployConfig | null> {
 export async function bootstrapDeployedDemo(): Promise<void> {
   const cfg = await fetchDeployConfig()
   if (!cfg) return
+  deployedDemo = true
   const reactorKey = (cfg.reactorKey ?? '').trim()
   if (!reactorKey) return // a deployment without its key configured stays a plain studio
 

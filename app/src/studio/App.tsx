@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { AppConfig } from './config'
 import { readUrlState, writeUrlState, type Section, type UrlState } from './url-state'
 import { loadProviderConfig, saveProviderConfig } from '../provider'
+import { isDeployedDemo } from './deploy-bootstrap'
 import type { ProviderConfig } from '../provider'
 import { ClientProvider } from './ClientContext'
 import { Settings } from '../provider'
@@ -132,7 +133,7 @@ export function App() {
             with the player up there is no topbar, no rail, no log pane —
             the shell behind it stays mounted nowhere at all, so a judge
             pressing ▶ begin never meets the authoring surface. */}
-        {!playingId && (
+        {!playingId && !isDeployedDemo() && (
         <>
         <header className="topbar">
           {/* Two runs, not one: "alakazam" carries the brand at live's own
@@ -225,6 +226,7 @@ export function App() {
         )}
         {playingId && (
           <PlayModal
+            locked={isDeployedDemo()}
             worldId={playingId}
             campaignId={url.campaignId ?? undefined}
             startState={url.playState ?? undefined}

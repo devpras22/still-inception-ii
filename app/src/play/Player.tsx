@@ -287,9 +287,14 @@ export function PlayModal({
   campaignId,
   startState,
   variant,
+  locked,
 }: {
   worldId: string
   onClose: () => void
+  /** A deployed demo is a cinema, not a tab in the studio: locked removes
+   *  every path back out — no Close button, no Esc — because behind the
+   *  player is an authoring surface whose Settings shows real keys. */
+  locked?: boolean
   /** Play this world as one ACT of a campaign: when a state hands off, the next
    *  act boots here with the flags its edge carries. */
   campaignId?: string | undefined
@@ -1999,7 +2004,7 @@ export function PlayModal({
   // this Escape listener. Authored `hotkey` fields were bound nowhere either.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { onClose(); return }
+      if (e.key === 'Escape' && !locked) { onClose(); return }
       if (e.metaKey || e.ctrlKey || e.altKey) return
       // Never swallow typing.
       const el = e.target
@@ -2061,7 +2066,7 @@ export function PlayModal({
       window.removeEventListener('blur', onBlur)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onClose, available, caps, sending])
+  }, [onClose, locked, available, caps, sending])
 
 
   return (
@@ -2071,7 +2076,7 @@ export function PlayModal({
         <code className="muted" title={actWorldId}>{actWorldId}</code>
         <Pill>{providers.world.active}</Pill>
         <span className="spacer" />
-        <Button variant="ghost" onClick={onClose} text="Close" />
+        {!locked && <Button variant="ghost" onClick={onClose} text="Close" />}
       </div>
 
       {caps && (
@@ -2120,14 +2125,14 @@ export function PlayModal({
               ))}
             </div>
             <div style={{ marginTop: 10 }}>
-              <Button variant="ghost" onClick={onClose} text="Close" />
+              {!locked && <Button variant="ghost" onClick={onClose} text="Close" />}
             </div>
           </div>
         ) : error ? (
           <div className="diag error" style={{ margin: 'auto', maxWidth: 520 }}>
             {error}
             <div style={{ marginTop: 10 }}>
-              <Button variant="ghost" onClick={onClose} text="Close" />
+              {!locked && <Button variant="ghost" onClick={onClose} text="Close" />}
             </div>
           </div>
         ) : (
