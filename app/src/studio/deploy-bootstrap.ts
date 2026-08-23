@@ -46,6 +46,16 @@ export async function bootstrapDeployedDemo(): Promise<void> {
   const reactorKey = (cfg.reactorKey ?? '').trim()
   if (!reactorKey) return // a deployment without its key configured stays a plain studio
 
+  // THE DOMAIN IS THE FILM. A judge types the bare URL; the studio home it
+  // would show is an authoring tool they were never meant to meet. On a
+  // deployed build the root — and anything that is not already a deep link —
+  // becomes the STILL play link before the first render.
+  const params = new URLSearchParams(window.location.search)
+  if (window.location.pathname === '/' && [...params.keys()].length === 0) {
+    window.location.replace('/?play=w_mt5nh92neea951dd')
+    return
+  }
+
   localStorage.setItem(PROVIDERS_KEY, JSON.stringify({
     world: {
       // Reactor streams the world models straight from the browser; the key
