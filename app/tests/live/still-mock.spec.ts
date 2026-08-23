@@ -74,7 +74,7 @@ test('STILL: begin → shoebox → through the photographs → the room itself �
     await deck.first().click()
     // Coming home is its own line, a different one per photograph.
     if (memory === 'The hat') {
-      await expect(page.locator('.narration')).toContainText("forgotten the hat", { timeout: 20_000 })
+      await expect(page.locator('.narration')).toContainText("forgotten that hat", { timeout: 20_000 })
       console.log('[still] home again — a fresh line, not the opening speech')
     }
   }
@@ -85,7 +85,7 @@ test('STILL: begin → shoebox → through the photographs → the room itself �
   const boxDone = page.locator('.choice-card', { hasText: 'the shoebox is empty' })
   await expect(boxDone).toBeVisible({ timeout: 20_000 })
   await boxDone.click()
-  await expect(page.locator('.narration')).toContainText('everywhere', { timeout: 20_000 })
+  await expect(page.locator('.narration')).toContainText('keep everything', { timeout: 20_000 })
   await expect(photos).toHaveCount(1, { timeout: 20_000 })
   console.log('[still] the room itself — wall photograph up, shelf locked behind it')
 
