@@ -128,6 +128,12 @@ export function App() {
   return (
     <ClientProvider config={config} providers={providers}>
       <div className="studio">
+        {/* CINEMA MODE. A play link (?play=) is a film, not a studio tour:
+            with the player up there is no topbar, no rail, no log pane —
+            the shell behind it stays mounted nowhere at all, so a judge
+            pressing ▶ begin never meets the authoring surface. */}
+        {!playingId && (
+        <>
         <header className="topbar">
           {/* Two runs, not one: "alakazam" carries the brand at live's own
               weight/size, "studio" stays a smaller subordinate suffix rather
@@ -185,6 +191,8 @@ export function App() {
 
           <aside className="logpane"><ApiLog /></aside>
         </div>
+        </>
+        )}
 
         {/* The floating composer: "+ Create a new world" hovers over every
             section so creating is always one click away, not a page you have

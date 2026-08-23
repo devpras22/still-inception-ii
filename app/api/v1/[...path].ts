@@ -13,17 +13,12 @@
  * not an editor.
  */
 import type { DemoRequest, DemoResponse } from '../types'
-import { readFile } from 'node:fs/promises'
-import { join } from 'node:path'
+// The world record as a generated module (see still/scripts/slim-world.ts) —
+// a serverless function's filesystem is not the project's, so `public/` is
+// unreadable from disk on Vercel; bundling the record is the honest fix.
+import worldDoc from './world-data'
 
-let cached: Record<string, unknown> | null = null
-async function world(): Promise<Record<string, unknown>> {
-  if (!cached) {
-    const raw = await readFile(join(process.cwd(), 'public', 'still-world.json'), 'utf8')
-    cached = JSON.parse(raw) as Record<string, unknown>
-  }
-  return cached
-}
+const doc: Record<string, unknown> = worldDoc
 
 function json(res: DemoResponse, status: number, body: unknown): void {
   res.status(status).json(body)
@@ -35,8 +30,6 @@ export default async function handler(req: DemoRequest, res: DemoResponse): Prom
   const path = (req.url ?? '').split('?')[0] ?? '/'
   const segs = path.split('/').filter(Boolean).slice(2) // drop api/v1
   try {
-    const doc = await world()
-
     if (req.method === 'GET' && segs[0] === 'worlds' && segs.length === 1) {
       json(res, 200, {
         worlds: [{
