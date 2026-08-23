@@ -8,7 +8,7 @@
 
 *for Marion, 1946–2026*
 
-**▶ Play: https://still-inception-ii-six.vercel.app/?play=w_mt5nh92neea951dd** — one link, no keys, no setup; press **begin**.
+**▶ Play: https://still.pras.fun/?play=w_mt5nh92neea951dd** — one link, no keys, no setup; press **begin**.
 
 *A submission to the Inception II: World Models Hackathon.*
 
