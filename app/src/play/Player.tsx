@@ -1514,11 +1514,13 @@ export function PlayModal({
         temperature: 0.9,
         maxTokens: 80,
         messages: [
-          { role: 'system', content: `${cast} Write ONE line she says aloud. Only the line itself — no quotes, no stage directions, 22 words or fewer. Grief under the words, not in them; she laughs mid-line if it wants one.` },
+          { role: 'system', content: `${cast} Write ONE line she says aloud. Only the line itself — plain text for a voice to speak: no quotes, no stage directions, no markdown or asterisks, 22 words or fewer. Grief under the words, not in them; she laughs mid-line if it wants one.` },
           { role: 'user', content: `Back at the living-room table after showing the family the photograph "${memory}". Photographs already seen: ${seen.join('; ') || 'none'}. Still waiting in the box or on the wall: ${unseen.join('; ') || 'nothing — this was the last one'}. The line as they settle back down:` },
         ],
       })
-      const line = out.trim().replace(/^["'\u201c]+|["'\u201d]+$/g, '').replace(/\s+/g, ' ')
+      // The line is SPOKEN: markdown emphasis survives into TTS as the word
+      // "asterisk", and the model reaches for italics when it wants weight.
+      const line = out.trim().replace(/^["'\u201c]+|["'\u201d]+$/g, '').replace(/\*\*?|__?|`/g, '').replace(/\s+/g, ' ')
       return line.length > 4 && line.length < 220 ? line : fallback
     } catch {
       return fallback
@@ -2097,14 +2099,27 @@ export function PlayModal({
   return (
     <div className="overlay" role="dialog" aria-modal="true" aria-label="Play world">
       <div className="overlay-head">
-        <strong>Play</strong>
-        <code className="muted" title={actWorldId}>{actWorldId}</code>
-        <Pill>{providers.world.active}</Pill>
+        {choiceMode ? (
+          <>
+            {/* A LANDING PAGE'S TITLE BAND, not a tool header: the film's name
+                and one sentence on the left, the event it was made for on the
+                right. The world id and provider are authoring facts. */}
+            <strong>{worldRef.current?.name ?? 'STILL'}</strong>
+            <span className="film-tag">{(worldRef.current?.['tagline'] as string | undefined) ?? ''}</span>
+          </>
+        ) : (
+          <>
+            <strong>Play</strong>
+            <code className="muted" title={actWorldId}>{actWorldId}</code>
+            <Pill>{providers.world.active}</Pill>
+          </>
+        )}
         <span className="spacer" />
+        {choiceMode && <span className="film-credit">Inception II · World Models Hackathon</span>}
         {!locked && <Button variant="ghost" onClick={onClose} text="Close" />}
       </div>
 
-      {caps && (
+      {caps && !choiceMode && (
         <div style={{ padding: '0 16px' }}>
           <CapabilityBadge capabilities={caps} />
         </div>
