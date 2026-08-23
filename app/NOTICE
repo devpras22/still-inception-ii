@@ -1,0 +1,34 @@
+Alakazam Studio
+Copyright 2026 Alakazam
+
+This product includes software developed at Alakazam.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+─────────────────────────────────────────────────────────────────────────────
+Third-party components
+─────────────────────────────────────────────────────────────────────────────
+
+React and React DOM
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+  Licensed under the MIT License.
+  https://github.com/facebook/react
+
+Build and test tooling (development dependencies only, not redistributed in the
+built application): Vite, TypeScript, Playwright, and the @vitejs/plugin-react
+package. Each is licensed under the MIT or Apache-2.0 license by its respective
+authors.
+
+─────────────────────────────────────────────────────────────────────────────
+Services
+─────────────────────────────────────────────────────────────────────────────
+
+This studio can drive a hosted world-model backend. Those services are operated
+by their own providers under their own terms; no provider credentials, model
+weights, or provider code are included in this repository. You supply your own
+credentials, and what you generate with them is governed by your agreement with
+that provider.

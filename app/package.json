@@ -1,0 +1,47 @@
+{
+  "name": "alakazam-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Alakazam Creator Studio \u2014 a standalone reference app built entirely on the public /v1 API. Create, edit, version, and play programmable worlds; share with your users. No internal dependencies.",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && npm run build:app",
+    "build:app": "vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview --port 4321",
+    "test:e2e": "playwright test tests/no-key.spec.ts tests/panels-author.spec.ts tests/panels-worlds.spec.ts tests/smoke.spec.ts --forbid-only --trace=retain-on-failure",
+    "test:e2e:hosted": "playwright test tests/smoke.spec.ts",
+    "pretest:e2e": "playwright install --with-deps chromium",
+    "test:live": "playwright test tests/live",
+    "test:capture": "playwright test tests/capture",
+    "check": "npm run typecheck && npm run check:conventions && npm run test:unit && npm run build:app && npm run test:e2e",
+    "check:conventions": "node scripts/check-conventions.mjs",
+    "doors": "node scripts/doors.mjs",
+    "studio": "tsx bin/studio.ts",
+    "test:unit": "tsx --test tests/unit/*.test.ts",
+    "protocol-check": "node scripts/protocol-check.mjs"
+  },
+  "dependencies": {
+    "@reactor-team/js-sdk": "2.12.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/node": "22.20.1",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@vitejs/plugin-react": "6.0.5",
+    "tsx": "4.23.1",
+    "typescript": "5.9.3",
+    "vite": "8.2.0"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "bin": {
+    "alakazam-studio": "bin/studio.ts"
+  }
+}

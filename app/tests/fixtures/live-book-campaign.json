@@ -1,0 +1,231 @@
+{
+  "campaign": {
+    "id": "camp_0blsdu3z",
+    "title": "The Lock-Keeper's Secret",
+    "logline": "Maren returns to her abandoned family cottage, finds a cryptic note in her father's ledger, and drains the lock to reveal a secret in the mud.",
+    "graph": {
+      "start": "act_1",
+      "acts": [
+        {
+          "actId": "act_1",
+          "worldId": "w_mscydh1x9ab90139",
+          "title": "Crossing the Rotting Bridge",
+          "canonical": true,
+          "summary": "Maren stands before the lock-keeper's cottage, the rotting footbridge swaying gently behind her."
+        },
+        {
+          "actId": "act_4",
+          "worldId": "w_mscyepxqdfa3496a",
+          "title": "The Memory of Drowning",
+          "canonical": false,
+          "summary": "She stares into the deep pound, paralyzed by the memory of her brother walking into the water and vanishing."
+        },
+        {
+          "actId": "act_2",
+          "worldId": "w_mscyfpbndca885c9",
+          "title": "Finding the Hidden Ledger",
+          "canonical": true,
+          "summary": "Inside the cold interior, Maren forces the stuck dresser drawer and discovers a penciled warning about the water level."
+        },
+        {
+          "actId": "act_3",
+          "worldId": "w_mscyh8dbbfd96985",
+          "title": "Draining the Lock Gates",
+          "canonical": true,
+          "summary": "At the rusty winding gear, Maren uses the leverage from the note to lower the water, exposing the hidden secret in the mud."
+        }
+      ],
+      "edges": [
+        {
+          "from": {
+            "actId": "act_1",
+            "state": "drained_mud"
+          },
+          "to": {
+            "actId": "act_4"
+          },
+          "kind": "deviation",
+          "carryFlags": [
+            "distracted"
+          ],
+          "label": "Look into the water"
+        },
+        {
+          "from": {
+            "actId": "act_4",
+            "state": "release"
+          },
+          "to": {
+            "actId": "act_1"
+          },
+          "kind": "loop",
+          "carryFlags": [
+            "focused"
+          ],
+          "label": "Turn away from the past"
+        },
+        {
+          "from": {
+            "actId": "act_1",
+            "state": "drained_mud"
+          },
+          "to": {
+            "actId": "act_2"
+          },
+          "kind": "golden",
+          "carryFlags": [
+            "inside"
+          ],
+          "requiresFlag": "focused",
+          "label": "Enter the cottage"
+        },
+        {
+          "from": {
+            "actId": "act_2",
+            "state": "mud_secret"
+          },
+          "to": {
+            "actId": "act_3"
+          },
+          "kind": "golden",
+          "carryFlags": [
+            "knows_secret"
+          ],
+          "label": "Read the warning note"
+        }
+      ],
+      "goldenThread": [
+        "act_1",
+        "act_2",
+        "act_3"
+      ]
+    },
+    "created_at": "2026-08-03T08:17:48.290Z",
+    "updated_at": "2026-08-03T08:17:48.290Z"
+  },
+  "spine": {
+    "title": "The Lock-Keeper's Secret",
+    "logline": "Maren returns to her abandoned family cottage, finds a cryptic note in her father's ledger, and drains the lock to reveal a secret in the mud.",
+    "acts": [
+      {
+        "actId": "act_1",
+        "title": "Crossing the Rotting Bridge",
+        "canonical": true,
+        "summary": "Maren stands before the lock-keeper's cottage, the rotting footbridge swaying gently behind her.",
+        "setting": "Rotting wooden bridge over a grey canal",
+        "goal": "Enter the cottage"
+      },
+      {
+        "actId": "act_4",
+        "title": "The Memory of Drowning",
+        "canonical": false,
+        "summary": "She stares into the deep pound, paralyzed by the memory of her brother walking into the water and vanishing.",
+        "setting": "Black water reflecting a slate sky",
+        "goal": "Overcome the past"
+      },
+      {
+        "actId": "act_2",
+        "title": "Finding the Hidden Ledger",
+        "canonical": true,
+        "summary": "Inside the cold interior, Maren forces the stuck dresser drawer and discovers a penciled warning about the water level.",
+        "setting": "Dusty room with a heavy oak table",
+        "goal": "Retrieve the ledger"
+      },
+      {
+        "actId": "act_3",
+        "title": "Draining the Lock Gates",
+        "canonical": true,
+        "summary": "At the rusty winding gear, Maren uses the leverage from the note to lower the water, exposing the hidden secret in the mud.",
+        "setting": "Rusty iron gears overlooking black mud",
+        "goal": "Reveal the secret"
+      }
+    ],
+    "edges": [
+      {
+        "from": {
+          "actId": "act_1",
+          "state": "drained_mud"
+        },
+        "to": {
+          "actId": "act_4"
+        },
+        "kind": "deviation",
+        "carryFlags": [
+          "distracted"
+        ],
+        "label": "Look into the water"
+      },
+      {
+        "from": {
+          "actId": "act_4",
+          "state": "release"
+        },
+        "to": {
+          "actId": "act_1"
+        },
+        "kind": "loop",
+        "carryFlags": [
+          "focused"
+        ],
+        "label": "Turn away from the past"
+      },
+      {
+        "from": {
+          "actId": "act_1",
+          "state": "drained_mud"
+        },
+        "to": {
+          "actId": "act_2"
+        },
+        "kind": "golden",
+        "carryFlags": [
+          "inside"
+        ],
+        "requiresFlag": "focused",
+        "label": "Enter the cottage"
+      },
+      {
+        "from": {
+          "actId": "act_2",
+          "state": "mud_secret"
+        },
+        "to": {
+          "actId": "act_3"
+        },
+        "kind": "golden",
+        "carryFlags": [
+          "knows_secret"
+        ],
+        "label": "Read the warning note"
+      }
+    ],
+    "goldenThread": [
+      "act_1",
+      "act_2",
+      "act_3"
+    ]
+  },
+  "diagnostics": [],
+  "worlds": [
+    {
+      "actId": "act_1",
+      "worldId": "w_mscydh1x9ab90139",
+      "states": 6
+    },
+    {
+      "actId": "act_4",
+      "worldId": "w_mscyepxqdfa3496a",
+      "states": 7
+    },
+    {
+      "actId": "act_2",
+      "worldId": "w_mscyfpbndca885c9",
+      "states": 7
+    },
+    {
+      "actId": "act_3",
+      "worldId": "w_mscyh8dbbfd96985",
+      "states": 5
+    }
+  ]
+}

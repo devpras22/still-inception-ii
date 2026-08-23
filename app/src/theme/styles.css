@@ -1,0 +1,786 @@
+/* Space Mono, vendored (OFL — see fonts/OFL.txt). The brand's one typeface;
+   a same-origin asset so the keyless clone still makes zero external requests. */
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:400;font-display:swap;src:url('./fonts/space-mono-400.woff2') format('woff2')}
+@font-face{font-family:'Space Mono';font-style:normal;font-weight:700;font-display:swap;src:url('./fonts/space-mono-700.woff2') format('woff2')}
+
+/* The Alakazam brand: pure black, white ink, charcoal hairlines, Space
+   Mono for EVERYTHING, phosphor green as the one accent — used as punctuation,
+   with a glow — and square corners. The studio is the same product, so it wears
+   the same skin; only these tokens changed, no component knows any of it. */
+:root{
+  --bg:#000; --panel:#000; --panel2:#0a0a0a; --line:#333; --ink:#fff;
+  --dim:#888; --acc:#00ff00; --acc2:#57ff57; --sel:#1a1a1a; --err:#ff3333; --warn:#ffaa00;
+  /* STILL's print chrome — the white border of a developed photograph
+     (warmer than pure white, like real paper) and the caption ink. */
+  --print-border:#f5f1e6; --caption-ink:#e8e6e1; --title-sub:#cfcac2; --door-black:#000;
+  /* The wordmark's own ink — near-white, one step off --ink, the same reason the
+     live site's mark is not pure white: a logo that is exactly body-text white
+     reads as a heading, not a mark. */
+  --brand-ink:rgb(208,208,208);
+  /* Derived surfaces. Every colour outside :root used to be a hardcoded hex here
+     and, worse, pasted verbatim into components — so a component knew a colour and
+     the "a component never knows the theme" contract was a comment describing an
+     unbuilt capability. These absorb every one of them; the light theme is then a
+     block that overrides this set, and no component changes. */
+  --ok-bg:#001a00; --ok-line:#00cc00; --ok-soft:#001100;
+  --warn-bg:#1a1100; --warn-line:#996600;
+  --err-bg:#1a0000; --err-line:#992222;
+  --input-bg:#000; --acc-ink:#000;
+  --media-bg:#000; --scrim:rgba(0,0,0,.8); --shadow:rgba(0,0,0,.6);
+  --glow:0 0 12px -2px rgba(0,255,0,.35);
+  --cover-fallback-bg:linear-gradient(135deg,#0a0a0a,#141414);
+  --radius:2px; --mono:'Space Mono','Roboto Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:'Space Mono','Roboto Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* The faint dot/graph-paper grid the live site washes every dark surface
+     with (nav strip, hero backdrop, section rails) — a 40px ruled square,
+     barely-there against the surface colour. Every studio screen was flat
+     solid black with none of it, which is the one thing that made the shell
+     read as a bare debug console instead of the same textured product.
+     .016 alpha, not .05 — measured against live's own rendered grid line
+     (a flat 4/255 over pure black), .05 read roughly 3x too strong and the
+     texture called attention to itself instead of sitting under everything. */
+  --grid-line:rgba(255,255,255,.016); --grid-size:40px;
+  /* Glass — the floating-surface family the kernel-agent bar further down is
+     built from (dark glass, hairline, two fill weights, a dimmed ink, and the
+     6-layer elevation that makes a card read as ABOVE the page rather than
+     drawn on it). Tokens, not literals, because the light theme has to
+     override every one of them or the bar becomes a dark island on a pale
+     page — the exact WRONG-THEME-ISLAND failure the shot rubric names. */
+  --glass:rgba(24,24,27,.9); --glass-soft:rgba(10,10,12,.55);
+  --glass-line:rgba(255,255,255,.1); --glass-fill:rgba(255,255,255,.06);
+  --glass-fill-hi:rgba(255,255,255,.14); --glass-dim:rgba(255,255,255,.6);
+  --elev:0 1.5px 2px rgba(0,0,0,.2),0 3px 5px rgba(0,0,0,.24),0 6px 10px rgba(0,0,0,.28),
+    0 12px 16px rgba(0,0,0,.32),0 22px 32px rgba(0,0,0,.4),0 54px 80px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size)}
+code{font-family:var(--mono);color:var(--acc2);font-size:.92em}
+.muted{color:var(--dim)}
+.spacer{flex:1}
+.row{display:flex;align-items:center;gap:8px}
+button{font:inherit;cursor:pointer;border-radius:2px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:6px 13px;text-transform:uppercase;letter-spacing:.06em;transition:background-color .14s ease,border-color .14s ease,color .14s ease,transform .14s ease,box-shadow .14s ease}
+button:active:not(:disabled){transform:translateY(1px)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:2px}
+button:hover{border-color:var(--ink)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:700}
+.btn-primary:hover{box-shadow:var(--glow);border-color:var(--acc)}
+.btn-ghost{background:transparent}
+.btn-danger:hover{border-color:var(--err);color:var(--err)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--input-bg);border:1px solid var(--line);border-radius:2px;padding:8px 11px;width:100%;transition:border-color .14s ease}
+input:focus,textarea:focus,select:focus{border-color:var(--acc);outline:none}
+textarea{resize:vertical;min-height:64px;font-family:var(--sans)}
+/* Checkbox/radio, restyled off the native OS control. Unstyled they render
+   browser blue — a third colour in a black/white/phosphor screen — so
+   appearance:none plus a hand-drawn mark keeps them in the same square-control
+   language as everything else and lets --acc, not the OS, decide the colour. */
+input[type="checkbox"],input[type="radio"]{
+  appearance:none;-webkit-appearance:none;width:16px;height:16px;flex:none;
+  margin:0;padding:0;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--input-bg);display:inline-block;position:relative;
+  cursor:pointer;vertical-align:middle;transition:border-color .14s ease;
+}
+input[type="radio"]{border-radius:50%}
+input[type="checkbox"]:hover,input[type="radio"]:hover{border-color:var(--ink)}
+input[type="checkbox"]:checked,input[type="radio"]:checked{border-color:var(--acc)}
+input[type="checkbox"]:checked::after{
+  content:'';position:absolute;left:3px;top:-1px;width:5px;height:9px;
+  border:solid var(--acc);border-width:0 2px 2px 0;transform:rotate(40deg);
+}
+input[type="radio"]:checked::after{
+  content:'';position:absolute;inset:3px;border-radius:50%;background:var(--acc);
+}
+input[type="checkbox"]:disabled,input[type="radio"]:disabled{opacity:.45;cursor:not-allowed}
+label{display:block;font-size:11px;color:var(--dim);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.08em}
+/* Live is consistently ALL CAPS for structural/section labels (ADVENTURES,
+   FEATURED ADVENTURE) and reserves title case for actual content — a rule
+   the studio's own page headers ("My Creations", "Community") broke against
+   the left-nav labels sitting right next to them, which are already caps via
+   the button rule below. `code` is exempted: a heading that names a literal
+   tool id (the API reference groups by e.g. `world`) is quoting syntax, not
+   labelling a section, and syntax case is never ornamental. */
+h1,h2,h3{margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em}
+h1 code,h2 code,h3 code{text-transform:none}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.pill{font-size:10px;color:var(--dim);border:1px solid var(--line);border-radius:2px;padding:2px 8px;text-transform:uppercase;letter-spacing:.08em}
+.badge{font-size:10px;padding:1px 7px;border-radius:2px;border:1px solid var(--line);color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.badge.public{color:var(--acc);border-color:var(--ok-line)}
+.badge.unlisted{color:var(--acc2)}
+.diag{border-left:3px solid var(--line);padding:5px 9px;margin:5px 0;background:var(--input-bg);font-size:12px;border-radius:0 4px 4px 0}
+.diag.error{border-color:var(--err)} .diag.warning{border-color:var(--warn)} .diag.info{border-color:var(--acc2)}
+
+/* Shell */
+.studio{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+/* ~80px, matching the live site's bar: a single row of controls sitting in
+   generous padding, not a dense strip of chips. Horizontal 50px matches
+   live's own edge gutter (--page-gutter: clamp(24px,3.5vw,60px), which
+   resolves to ~50px at the 1440px width both sides are measured at) — the
+   28px this replaced sat the wordmark and the rail below it at two
+   different left edges. */
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 50px;border-bottom:1px solid var(--line);background:var(--panel)}
+/* The wordmark, not a differently-branded logo: near-white and lowercase like
+   the live mark, no icon glyph, no flat green fill — green stays the site's
+   one-word accent elsewhere (buttons, pills, the active nav item) instead of
+   painting the whole mark. Sized and weighted to live's own brand mark (24px,
+   800) so it actually holds the corner instead of reading as running text;
+   "studio" stays a subordinate suffix — smaller, dimmer, never competing with
+   the word that carries the brand. */
+.brand{cursor:pointer}
+.brand-word{color:var(--brand-ink);font-size:24px;font-weight:800;letter-spacing:.02em;text-transform:lowercase}
+.brand-suffix{color:var(--dim);font-size:12px;font-weight:400;letter-spacing:.08em;text-transform:lowercase;margin-left:2px}
+.body{flex:1;display:grid;grid-template-columns:220px 1fr 320px;min-height:0}
+.rail{border-right:1px solid var(--line);background:var(--panel);padding:12px 8px;display:flex;flex-direction:column;gap:4px}
+.rail-item{display:flex;align-items:center;gap:10px;justify-content:flex-start;background:transparent;border:none;border-radius:6px;padding:9px 12px;color:var(--dim);width:100%;text-align:left}
+.rail-item:hover{background:var(--panel2);color:var(--ink)}
+.rail-item.on{background:var(--ok-soft);color:var(--acc)}
+.rail-icon{width:18px;text-align:center}
+.content{overflow:auto;padding:20px;min-height:0}
+.logpane{border-left:1px solid var(--line);background:var(--panel);min-height:0;display:flex}
+/* The dot/grid texture again, layered over the surfaces that paint their own
+   solid --panel and would otherwise hide the one on <body>: the nav strip and
+   the log rail. Longhand-only — it rides on top of each selector's own
+   `background` shorthand above (which already set the colour) without
+   re-declaring it. (.overlay and .overlay-head get the same treatment further
+   down, after their own rules, for the same reason.) */
+.topbar,.rail,.logpane{
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+}
+
+/* API log */
+.apilog{display:flex;flex-direction:column;width:100%;min-height:0}
+.apilog-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);font-size:12px}
+.apilog-body{flex:1;overflow:auto;padding:6px 10px;font-family:var(--mono);font-size:11px}
+.apilog-empty{margin-top:40px;text-align:center}
+.apilog-row{display:flex;gap:8px;padding:2px 0;white-space:nowrap}
+.apilog-method{color:var(--acc2);width:48px;flex:none}
+.apilog-status{width:34px;flex:none;text-align:right}
+.apilog-status.ok{color:var(--acc)} .apilog-status.err{color:var(--err)}
+.apilog-path{overflow:hidden;text-overflow:ellipsis;color:var(--dim);flex:1}
+.apilog-ms{width:52px;flex:none;text-align:right}
+
+/* Grids + cards (creations/community) */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+/* No outer stroke: live's media cards bleed edge-to-edge with nothing
+   wrapping image+meta+actions in a box, and the grid's own gap (above) is
+   what separates one card from the next — a border here read as a form
+   panel, not a media card. The hover glow still needs to draw ITS OWN edge
+   (there is no border-color left to swap), so it is a ring shadow instead. */
+.world-card{background:var(--panel2);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:transform .14s ease,box-shadow .14s ease}
+.world-card:hover{transform:translateY(-2px);box-shadow:var(--glow),0 0 0 1px var(--ink)}
+.world-card .cover{aspect-ratio:16/9;background:var(--media-bg);object-fit:cover;width:100%;display:block}
+.world-card .cover-fallback{aspect-ratio:16/9;background:var(--cover-fallback-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--dim)}
+.world-card .cover-glyph{font-size:46px;font-weight:800;line-height:1;opacity:.5;letter-spacing:.02em}
+.world-card .cover-note{font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+.world-card .meta{padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.world-card .title{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.world-card .actions{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:2px 12px 12px}
+.world-card .actions button{padding:4px 10px;font-size:12px;flex:none}
+.world-card .actions .btn-danger{margin-left:auto}
+
+/* Console frame — the ASCII corner-bracket accents live wraps its primary
+   prompt console in (StoryMode's arcade-machine corners: four short
+   two-sided L's, one per corner). Reused here on the studio's own prompt
+   inputs (premise, seed frame) — a wrapper plus four aria-hidden corner
+   spans, decorative only, so it composes around whatever theme control it
+   is framing without becoming an interactive element itself. */
+.console-frame{position:relative;padding:3px}
+.console-corner{position:absolute;width:10px;height:10px;border-color:var(--acc);border-style:solid;border-width:0;opacity:.7;pointer-events:none}
+.console-corner-tl{top:-1px;left:-1px;border-top-width:2px;border-left-width:2px}
+.console-corner-tr{top:-1px;right:-1px;border-top-width:2px;border-right-width:2px}
+.console-corner-bl{bottom:-1px;left:-1px;border-bottom-width:2px;border-left-width:2px}
+.console-corner-br{bottom:-1px;right:-1px;border-bottom-width:2px;border-right-width:2px}
+
+/* Modals + full-screen editor/player */
+/* A centred flex child taller than the scrim overflows in BOTH directions with
+   nothing to scroll — on a 900px laptop that put "Save providers" at y=1111 and
+   made every provider setting unreachable, so the studio's whole bring-your-own
+   surface could be read and never saved. align-items:flex-start + margin:auto on
+   the child still centres it when it fits, and scrolls when it does not. */
+.modal-scrim{position:fixed;inset:0;background:var(--scrim);backdrop-filter:blur(3px);display:flex;align-items:flex-start;justify-content:center;z-index:60;padding:24px;overflow:auto}
+.modal-scrim>*{margin:auto}
+.overlay{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column}
+.overlay-head{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+/* Same grid wash as the topbar/rail (declared in :root) — after the rules
+   above on purpose, since their `background` shorthand resets background-image
+   and a rule earlier in the file would lose that fight. Every full-screen
+   editor/player screen gets the texture too, not just the shell chrome
+   around it. */
+.overlay,.overlay-head{
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:var(--grid-size) var(--grid-size);
+}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button{padding:5px 10px;font-size:12px}
+.tabs button.on{background:var(--ok-bg);border-color:var(--ok-line);color:var(--acc)}
+iframe.embed{width:100%;height:100%;border:0;background:var(--media-bg);border-radius:8px}
+
+/* toast */
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ok-bg);border:1px solid var(--ok-line);color:var(--acc);padding:9px 16px;border-radius:8px;z-index:80;box-shadow:var(--glow);animation:toast-in .18s ease-out}
+@keyframes toast-in{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+.toast.err{background:var(--err-bg);border-color:var(--err-line);color:var(--err)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.empty{color:var(--dim);text-align:center;margin-top:64px}
+
+/* Light palette. The bare :root above is the dark theme and stays the default —
+   this block only takes effect under the `data-theme="light"` attribute that
+   index.html's pre-React preload script and the theme domain's applyTheme() are
+   the two writers of on <html>. Every accent here is a DARKENED version of its
+   dark-theme hue, not a different colour: --acc/--acc2/--err/--warn read near
+   1.2:1 against a light ground at their dark-theme brightness, so the hue is
+   kept and the lightness is pulled down until text set in it clears WCAG on
+   this theme's surfaces. --media-bg is deliberately absent from this block — it
+   letterboxes video and stays black in both themes, because a video surface is
+   content, not chrome. Components never change for either theme; they only
+   ever name a token. */
+:root[data-theme='light']{
+  --bg:#f4f6f9; --panel:#ffffff; --panel2:#fbfcfe; --line:#c9c9c9; --ink:#111;
+  --dim:#5a5a5a; --acc:#007700; --acc2:#006600; --sel:#e8e8e8; --err:#cc0000; --warn:#7a5300;
+  --brand-ink:#333333;
+  --ok-bg:#e4f5e4; --ok-line:#66aa66; --ok-soft:#eef7ee;
+  --warn-bg:#f6ecd4; --warn-line:#c8a94e;
+  --err-bg:#f9e0e4; --err-line:#d98995;
+  --input-bg:#ffffff; --acc-ink:#ffffff;
+  --scrim:rgba(15,23,32,.45); --shadow:rgba(28,39,52,.16);
+  --glow:0 0 12px -2px rgba(0,119,0,.3);
+  --cover-fallback-bg:linear-gradient(135deg,#e8e8e8,#f4f4f4);
+  /* Same faint ruled grid, dark-on-light instead of light-on-dark, same
+     reduced .016 strength as the dark theme above. */
+  --grid-line:rgba(0,0,0,.016);
+  /* The glass family, inverted: a pale frosted surface with dark hairlines and
+     a much shallower shadow (deep black alphas on a light page read as soot,
+     not elevation). */
+  --glass:rgba(252,252,253,.92); --glass-soft:rgba(240,242,245,.7);
+  --glass-line:rgba(0,0,0,.12); --glass-fill:rgba(0,0,0,.05);
+  --glass-fill-hi:rgba(0,0,0,.12); --glass-dim:rgba(0,0,0,.55);
+  --elev:0 1.5px 2px rgba(28,39,52,.06),0 3px 5px rgba(28,39,52,.07),0 6px 10px rgba(28,39,52,.08),
+    0 12px 16px rgba(28,39,52,.09),0 22px 32px rgba(28,39,52,.11),0 54px 80px rgba(28,39,52,.16);
+}
+.checkbox{display:flex;align-items:center;gap:8px;cursor:pointer;color:var(--ink);font-size:14px;margin:10px 0 4px}
+/* Sizing for the input here now comes from input[type="checkbox"] above, which
+   is more specific than the old blanket input{width:100%} this once undid. */
+
+/* Scrollbars follow the theme — a bright default track is the one element a
+   token sweep cannot reach without these. */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;border:2px solid transparent;background-clip:content-box}
+::-webkit-scrollbar-track{background:transparent}
+
+/* Graph canvas (`src/author/GraphCanvas.tsx`) — the state-machine editor's
+   node/edge accents. Everything else the canvas draws (card background,
+   borders, ids, badges, default/error/warning/selected edges) reuses the
+   shared token set above; CYAN for "this event lives inside the card, it is
+   not an edge" is a hue kept out of the token system elsewhere too — turned
+   into a token pair here so the component never names a literal. */
+:root{
+  --override:#66ccff; --override-line:#335566;
+}
+:root[data-theme='light']{
+  /* Darkened the same way every other light-theme accent above is: same hue,
+     pulled down until it clears contrast on a white card. */
+  --override:#0077aa; --override-line:#5f95a6;
+}
+
+/* Doctrine lints (`src/author/DoctrineLints.tsx`) — the floating bottom-left
+   panel over the graph canvas. Positioned a little higher than the canvas legend
+   (`GraphEditor.tsx`'s "▶ entrance · ■ ending …" note, itself pinned at
+   bottom:10) so the two coexist instead of overlapping — the legend stays put,
+   the panel floats above it. The component itself renders nothing at all on a
+   clean world, so there is no empty-panel state to style here. */
+.lint-panel{position:absolute;bottom:34px;left:12px;width:380px;max-width:calc(100% - 24px);max-height:38vh;display:flex;flex-direction:column;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;z-index:5}
+.lint-panel-head{display:flex;align-items:center;gap:8px;width:100%;justify-content:flex-start;border:none;border-bottom:1px solid var(--line);border-radius:0;background:transparent;padding:8px 10px;font-size:11px;letter-spacing:.06em}
+.lint-panel-count{color:var(--dim)}
+.lint-panel-body{flex:1;min-height:0;overflow-y:auto}
+.lint-row{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer}
+.lint-row:last-child{border-bottom:none}
+.lint-row:hover{background:var(--sel)}
+.lint-row:focus-visible{outline:2px solid var(--acc);outline-offset:-2px}
+.lint-chip{flex:none;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:2px;padding:2px 6px;border:1px solid var(--line)}
+.lint-chip-error{color:var(--err);border-color:var(--err)}
+.lint-chip-warning{color:var(--warn);border-color:var(--warn)}
+.lint-chip-info{color:var(--dim)}
+.lint-msg{flex:1;min-width:150px;font-size:12px}
+.lint-whats{flex:none;font-size:10px;padding:3px 8px}
+.lint-rule{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:6px}
+.lint-path{width:100%;font-family:var(--mono);font-size:10px;color:var(--dim)}
+/* The one-click fix, where one is safe. Reads as an action, not a warning:
+   it is the only control in this panel that CHANGES the graph. */
+.lint-fix{flex:none;font-size:10px;padding:3px 9px;border-color:var(--ok-line);color:var(--acc)}
+.lint-fix:hover:not(:disabled){background:var(--ok-soft);border-color:var(--acc)}
+/* "what's this?" — the creator-facing explanation (world/lintHelp.ts), with the
+   doctrine's own precise sentence beneath it and the rule id last, for anyone
+   who wants to look the rule up. */
+.lint-what{width:100%;font-size:11px;line-height:1.5;color:var(--ink);
+  background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px}
+.lint-detail{margin-top:6px;font-size:11px;line-height:1.45;color:var(--dim)}
+
+/* Floating composer (`src/author/FloatingComposer.tsx`, `src/author/Composer.tsx`)
+   — the bottom-centre create surface: a collapsed pill that expands into a
+   compact card, floating above whatever section the author is on.
+   .composer-overlay is pinned to left:220px / right:320px on purpose — that is
+   .body's own grid-template-columns (220px rail, 1fr content, 320px log pane),
+   so the bar spans exactly the content column and can never bleed into the
+   rail or the log pane regardless of viewport width. pointer-events:none on
+   that spanning bar, auto again on its one child, so the empty space either
+   side of the pill/card never steals a click meant for whatever sits under it.
+   z-index:20 — under .overlay's 50 and .modal-scrim's 60 on purpose: the
+   editor, the player and Settings all paint a full, opaque `inset:0` surface
+   over it, so this never needs its own visibility check against them. */
+.composer-overlay{position:fixed;left:220px;right:320px;bottom:24px;display:flex;justify-content:center;pointer-events:none;z-index:20}
+.composer-overlay>*{pointer-events:auto}
+.composer-pill{display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:8px 10px 8px 18px;box-shadow:var(--shadow)}
+.composer-dice{border-radius:999px;padding:6px 10px}
+.composer-card{position:relative;width:420px;max-width:calc(100% - 24px);box-shadow:var(--shadow)}
+/* Floats over the card's own top-right corner rather than sitting in a header
+   row — a compact card has no room to spare for one. */
+.composer-close{position:absolute;top:-13px;right:-13px;width:26px;height:26px;padding:0;border-radius:999px;background:var(--panel2);font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.composer-chips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:10px}
+.composer-try-label{font-size:10px;letter-spacing:.08em;margin-right:2px}
+/* Chips carry a whole premise sentence, not a short label — the button
+   vocabulary's default uppercase+tracked treatment reads as shouting at that
+   length, so this is the one place a Button opts back out of it. Truncated
+   with an ellipsis (full text in the title attribute) so four of them read as
+   a 2-up grid instead of one sentence per row. */
+.composer-chip{max-width:186px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;padding:4px 9px;text-transform:none;letter-spacing:normal}
+
+/* Arcade layer (`src/play/Player.tsx`) — the interactive-objects overlay: a
+   clickable hotspot drawn at a detected anchor's box over the live frame,
+   firing the SAME beat the rail below it does.
+   Square corners and the accent outline reuse the studio's existing control
+   language rather than inventing a new "clickable region" idiom. Entirely
+   absent from the DOM (not merely hidden) whenever there is no hotspot to
+   show, so these rules cost nothing on the default keyless path. */
+/* ── The play stage: picture, chips, inspector ──────────────────────────────
+   The picture keeps its own stacking context so the chips (z 4) sit over the
+   provider's video and under nothing else, and the inspector is a SIBLING
+   column — not a fixed overlay — because the studio's play view has its own
+   header to keep reachable. */
+.play-stage{flex:1;min-height:0;display:flex;gap:12px}
+.play-picture{flex:1;min-width:0;position:relative;display:flex}
+
+/* Chips — pinned to the object each interaction happens AT (`src/play/Chips.tsx`).
+   Four looks, none of them a greyed dead control: armed reads as an
+   invitation, the cyan beacon and the orange
+   arrow are objective markers that tell you what to do to arm it. The 700ms
+   position transition is what turns a detector's per-tick jitter into a chip
+   that GLIDES; the rules behind it live in `src/play/anchors.ts`. */
+.chip-layer{position:absolute;inset:0;pointer-events:none;z-index:4}
+.chip{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;
+  transition:left .7s ease-out,top .7s ease-out,background-color .18s ease,border-color .18s ease;
+  display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:3px;
+  font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;text-transform:none;
+  white-space:nowrap;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);user-select:none}
+.chip-armed{background:var(--glass);border:1px solid var(--glass-fill-hi);color:var(--ink);box-shadow:var(--elev)}
+.chip-armed:hover:not(:disabled){border-color:var(--ink)}
+.chip-sending{background:var(--ok-bg);border:1px solid var(--acc);color:var(--acc);box-shadow:var(--glow)}
+.chip-beacon{background:var(--glass);border:1px solid var(--override);color:var(--override);
+  animation:chip-beacon-pulse 1.5s ease-in-out infinite}
+.chip-turn{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn)}
+@keyframes chip-beacon-pulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 12px -4px var(--override)}
+  50%{transform:translate(-50%,-50%) scale(1.09);box-shadow:0 0 24px -4px var(--override)}
+}
+/* A refusal explains itself. The chip stays interactive — it is never a
+   control that silently does nothing. */
+.chip-toast{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);z-index:5;
+  pointer-events:none;max-width:82%;text-align:center;background:var(--glass);
+  border:1px solid var(--warn-line);color:var(--warn);border-radius:4px;padding:8px 16px;
+  font-family:var(--mono);font-size:13px;letter-spacing:.03em;box-shadow:var(--elev);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+
+/* ── Play inspector (`src/play/Inspector.tsx`) ───────────────────────────── */
+.playspect{width:340px;flex:none;display:flex;flex-direction:column;gap:12px;overflow:hidden;
+  padding:10px;background:var(--glass);border:1px solid var(--glass-line);border-radius:2px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);font-family:var(--mono)}
+.playspect-head{display:flex;align-items:center;gap:8px}
+.playspect-btn{padding:3px 9px;font-size:10px;letter-spacing:.1em;background:var(--glass-fill);
+  border:1px solid var(--glass-line);color:var(--dim);border-radius:5px}
+.playspect-btn:hover:not(:disabled){color:var(--ink)}
+.playspect-btn.on{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+.playspect-probing{color:var(--acc);font-size:10px;animation:sp 1.6s linear infinite}
+.playspect-section{display:flex;flex-direction:column;gap:4px;min-height:0}
+.playspect-section.grow{flex:1;overflow:hidden}
+.playspect-label{font-size:9px;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;
+  display:flex;align-items:center;gap:6px}
+.playspect-count{margin-left:auto;color:var(--dim)}
+.playspect-count.over{color:var(--err)}
+.playspect-paused{color:var(--acc)}
+.playspect-trail{display:flex;flex-direction:column;gap:2px;max-height:132px;overflow-y:auto}
+.playspect-node{text-align:left;justify-content:flex-start;padding:2px 6px;border-radius:4px;
+  font-size:9px;text-transform:none;letter-spacing:normal;background:var(--glass-fill);
+  border:1px solid var(--glass-line);color:var(--dim)}
+.playspect-node.on{border-color:var(--acc);background:var(--ok-soft);color:var(--ink)}
+.playspect-map{display:flex;flex-wrap:wrap;gap:4px;max-height:76px;overflow-y:auto}
+.playspect-dot{font-size:9px;padding:2px 6px;border-radius:3px;border:1px solid var(--line);
+  color:var(--dim);opacity:.5;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.playspect-dot.seen{opacity:1;border-color:var(--ok-line);color:var(--acc2)}
+.playspect-dot.on{opacity:1;border-color:var(--acc);background:var(--ok-soft);color:var(--acc)}
+.playspect-branch{text-align:left;justify-content:flex-start;padding:5px 8px;border-radius:5px;
+  font-size:11px;text-transform:none;letter-spacing:normal;background:var(--glass-fill);
+  border:1px solid var(--override-line);color:var(--ink)}
+.playspect-branch:hover:not(:disabled){border-color:var(--override)}
+.playspect-branch.terminal{border-color:var(--err-line)}
+.playspect-context{display:flex;align-items:center;gap:8px;font-size:11px}
+.playspect-state{color:var(--acc)}
+.playspect-event{color:var(--dim)}
+.playspect-chips{display:flex;gap:4px}
+.playspect-reg{font-size:9px;letter-spacing:.1em;padding:1px 6px;border:1px solid var(--line);
+  border-radius:3px;color:var(--dim);opacity:.55}
+.playspect-reg.on{opacity:1;border-color:var(--acc);color:var(--acc)}
+.playspect-layers{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:2px}
+.playspect-layer-label{font-size:9px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.playspect-layer-text{font-size:11px;line-height:1.45;color:var(--ink);white-space:pre-wrap}
+.playspect-open{position:absolute;right:12px;bottom:12px;z-index:5;font-size:10px;padding:6px 9px;
+  border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);color:var(--dim);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.playspect-open:hover{color:var(--ink)}
+/* The director's line + rewind. Top-left of the picture, clear of the quest
+   panel on the right and of the composer at the bottom. */
+.direct-note{position:absolute;left:12px;top:12px;z-index:6;font-size:11px;padding:6px 10px;
+  border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);color:var(--ink);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);pointer-events:none}
+.rewind-btn{position:absolute;left:12px;bottom:12px;z-index:6;font-size:10px;padding:6px 9px;
+  border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);color:var(--dim);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.rewind-btn:hover{color:var(--ink)}
+/* Which chapter of a campaign this is. Top-centre: the quest panel owns the
+   right, the director's line the left. */
+/* Put the graph back the way the machine had it. */
+.layout-reset{position:absolute;left:12px;top:12px;z-index:6;font-size:10px;padding:5px 9px;
+  border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);color:var(--dim)}
+.layout-reset:hover{color:var(--ink)}
+/* The whole graph at a glance, and where the pane is looking. Bottom-right of
+   the canvas: the lints own the bottom-left and the composer the centre. */
+.minimap{position:absolute;right:12px;bottom:12px;z-index:6;border-radius:8px;
+  background:var(--glass);border:1px solid var(--glass-line);cursor:pointer;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.minimap:hover{border-color:var(--dim)}
+.minimap-view{fill:var(--acc);fill-opacity:.14;stroke:var(--acc);stroke-width:1}
+.minimap-dot{fill:var(--dim)}
+.minimap-dot.entrance{fill:var(--acc)}
+.minimap-dot.selected{fill:var(--ink)}
+/* The editor tour: shown once, reopenable from the ? in the head. */
+.ftue-scrim{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+  background:var(--scrim);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:24px}
+.ftue{width:min(520px,100%);padding:22px 24px;border-radius:14px;background:var(--panel);
+  border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.ftue-glyph{font-size:26px;color:var(--acc);line-height:1}
+.ftue-kicker{margin-top:10px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.ftue-title{margin:4px 0 8px;font-size:19px;color:var(--ink)}
+.ftue-body{font-size:13px;line-height:1.6;color:var(--dim)}
+.ftue-body strong{color:var(--ink);font-weight:600}
+.ftue-dots{display:flex;gap:5px;margin-top:16px}
+.ftue-dot{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.ftue-dot.on{background:var(--acc)}
+/* A console in the world. Over the picture, never instead of it. */
+.terminal{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;z-index:9;
+  width:min(560px,calc(100% - 32px));padding:12px;border-radius:10px;background:var(--glass);
+  border:1px solid var(--acc);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.terminal-log{max-height:180px;overflow-y:auto;margin-bottom:8px;font-family:var(--mono);font-size:12px;line-height:1.6}
+.terminal-you{color:var(--dim)}
+.terminal-it{color:var(--acc)}
+/* A pre-rendered clip over the live picture. */
+.cutscene{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  background:var(--media-bg);z-index:8}
+/* Subtitles over a memory clip — the suite's words, readable with sound off. */
+.cut-caption{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);z-index:9;
+  max-width:78%;text-align:center;font-size:15px;line-height:1.55;color:var(--ink);
+  padding:8px 18px;border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);pointer-events:none}
+/* Story mode: the choice deck — two or three big calls over the live picture. */
+.story-hud{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;
+  display:flex;gap:8px;align-items:baseline;padding:7px 16px;border-radius:8px;
+  background:var(--glass);border:1px solid var(--glass-line);color:var(--dim);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.story-hud-title{color:var(--ink);font-weight:600}
+.story-hud-sep{color:var(--dim)}
+.choice-deck{position:absolute;right:14px;top:56px;transform:none;z-index:6;
+  display:flex;gap:8px;justify-content:flex-end;align-items:flex-start;flex-wrap:wrap;max-width:44%}
+.choice-card{display:flex;flex-direction:column;align-items:center;gap:5px;padding:6px 8px;min-width:0;
+  max-width:136px;
+  border-radius:10px;background:var(--glass);border:1px solid var(--glass-line);color:var(--ink);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);cursor:pointer;font-size:12px;
+  font-family:inherit;transition:border-color .15s ease,box-shadow .15s ease,transform .15s ease}
+.choice-card:hover:not(:disabled){border-color:var(--acc);box-shadow:var(--glow);transform:translateY(-2px)}
+.choice-card:disabled{opacity:.4;cursor:default}
+.choice-key{font-family:var(--mono);font-size:11px;color:var(--acc);border:1px solid var(--acc);
+  border-radius:4px;padding:1px 8px;letter-spacing:.05em}
+.choice-label{letter-spacing:.02em;line-height:1.35;text-align:center}
+/* A choice that is a photograph: the card becomes the print lying on the
+   table, white border and all. */
+.choice-card-photo{padding:8px 8px 12px;min-width:170px;max-width:210px}
+.choice-photo{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:4px;
+  border:4px solid var(--print-border);box-shadow:0 2px 8px rgba(0,0,0,.45);
+  background:var(--print-border);filter:saturate(.92) contrast(.98)}
+.choice-card-photo .choice-label{font-size:10px;margin-top:4px}
+/* THE TITLE CARD — begin arms the film's sound. */
+.title-card{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:14px;background:rgba(8,8,10,.55);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.title-name{font-size:64px;font-weight:700;letter-spacing:.35em;text-indent:.35em;color:var(--ink);
+  text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.title-sub{font-size:19px;color:var(--title-sub);max-width:600px;text-align:center;line-height:1.6}
+.begin-btn{font-size:22px !important;padding:16px 44px !important;letter-spacing:.12em}
+/* THE ZOOM DOOR — the print in your hand scaling into its world; it holds
+   until the session stands, then fades to reveal you inside the picture. */
+.zoom-door{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;
+  background:var(--door-black);pointer-events:none;transition:opacity .9s ease}
+.zoom-door.leaving{opacity:0}
+.zoom-door img{width:min(58vw,620px);aspect-ratio:3/2;object-fit:cover;
+  border:14px solid var(--print-border);box-shadow:0 24px 90px rgba(0,0,0,.75);
+  animation:door-zoom 3.2s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes door-zoom{from{transform:scale(.3)}to{transform:scale(2.35)}}
+/* The mission blip: where you are going, and how much driving is left. */
+.waypoint{position:absolute;right:12px;top:12px;z-index:6;display:flex;gap:10px;align-items:baseline;
+  padding:6px 12px;border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);pointer-events:none}
+.waypoint.approaching{border-color:var(--acc)}
+.waypoint-label{font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.waypoint-dist{font-size:13px;color:var(--ink);font-family:var(--mono)}
+.waypoint.approaching .waypoint-dist{color:var(--acc)}
+/* A set-piece walking itself. */
+.seq-banner{position:absolute;left:12px;top:44px;z-index:6;font-size:11px;padding:5px 10px;
+  border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);color:var(--ink);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);pointer-events:none}
+/* What the player READS — display copy, never a prompt. Sits low and centred
+   under the picture, wide enough for a sentence and short enough to ignore. */
+.narration{position:absolute;left:50%;transform:translateX(-50%);bottom:78px;z-index:6;
+  max-width:min(640px,calc(100% - 48px));padding:10px 16px;border-radius:10px;
+  background:var(--glass);border:1px solid var(--glass-line);color:var(--ink);
+  font-size:13px;line-height:1.5;text-align:center;pointer-events:none;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* Story mode: the caption is the film's subtitle — BIG, at the foot of the
+   frame, above the zoom door (the homecoming lines speak over a connecting
+   world, and a voice over a silent boot needs its words on screen). */
+.narration-story{bottom:84px;top:auto;font-size:24px;line-height:1.45;
+  max-width:min(920px,92%);padding:14px 26px;z-index:9;font-weight:500}
+/* The boot/door status — the only thing on screen during a world's boot. */
+.boot-status{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--caption-ink);
+  text-shadow:0 2px 12px rgba(0,0,0,.8)}
+/* The authored first frame, dimmed behind the boot spinner: "connecting" is a
+   photograph of the room you're entering, not a black rectangle. */
+.boot-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.5) saturate(.85);pointer-events:none}
+/* The episode record's size — the provenance of the gate verdicts beside it. */
+.playspect-episode{float:right;font-size:9px;color:var(--dim);text-transform:none;letter-spacing:0}
+/* An authored gate, replayed over the session that just happened. */
+.gate-hit{color:var(--acc);font-size:10px;margin-left:6px}
+.gate-miss{color:var(--dim);font-size:10px;margin-left:6px}
+.act-banner{position:absolute;left:50%;transform:translateX(-50%);top:12px;z-index:6;font-size:12px;
+  padding:6px 12px;border-radius:8px;background:var(--glass);border:1px solid var(--glass-line);
+  color:var(--ink);text-align:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  pointer-events:none}
+@media (max-width:1100px){.playspect{width:280px}}
+@media (prefers-reduced-motion:reduce){.chip,.chip-beacon{transition:none;animation:none}}
+
+/* ── The composer ────────────────────────────────────────────────────────────
+   A 560px card centred on the VIEWPORT above a blurred scrim, a borderless
+   auto-growing prompt with no label, one footer row, a circular close outside
+   the corner, and a border that breathes while the kernel works. The values
+   are exact; only the colours are swapped for this studio's tokens. */
+.composer-scrim{position:fixed;inset:0;z-index:110;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);animation:scrim-in .22s ease-out}
+@keyframes scrim-in{from{opacity:0}to{opacity:1}}
+
+.composer-root{position:fixed;left:0;right:0;bottom:24px;z-index:120;display:flex;justify-content:center;padding:0 16px;pointer-events:none}
+.composer-root>*{pointer-events:auto}
+.composer-card{width:560px;max-width:calc(100vw - 32px);position:relative;box-shadow:0 20px 70px rgba(0,0,0,.6)}
+
+.composer{position:relative;display:flex;flex-direction:column;gap:8px;padding:12px;border:1px solid var(--line);
+  background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  /* Ambient halo so an open, unfocused composer still reads against the black. */
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 0 26px -6px rgba(255,255,255,.14),0 0 64px -14px rgba(0,255,0,.16);
+  transition:border-color .2s ease,box-shadow .2s ease}
+.composer:focus-within{border-color:var(--acc);box-shadow:0 0 0 1px rgba(0,255,0,.45),0 0 28px -6px rgba(0,255,0,.5),0 0 64px -16px rgba(0,255,0,.2)}
+/* Working: a slow breathing outline, so the wait reads as alive rather than stuck. */
+.composer.busy{border-color:var(--acc);animation:composer-pulse 1.9s ease-in-out infinite}
+@keyframes composer-pulse{
+  0%,100%{box-shadow:0 0 0 1px rgba(0,255,0,.18),0 0 16px -5px rgba(0,255,0,.30);border-color:rgba(0,255,0,.45)}
+  50%{box-shadow:0 0 0 1px rgba(0,255,0,.5),0 0 36px -4px rgba(0,255,0,.68);border-color:var(--acc)}}
+
+.composer-prompt{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--ink);background:transparent;
+  border:none;outline:none;resize:none;min-height:26px;max-height:140px;overflow-y:auto;padding:0;width:100%;border-radius:0}
+.composer-prompt:focus{border:none;outline:none}
+.composer-prompt::placeholder{color:var(--dim)}
+.composer-prompt:disabled{opacity:.6}
+
+.composer-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.composer-footer-left,.composer-footer-right{display:flex;align-items:center;gap:8px}
+.composer-attach{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink);background:transparent;
+  border:1px solid var(--line);padding:6px 10px}
+.composer-attach:hover:not(:disabled){border-color:var(--acc);color:var(--acc)}
+.composer-send{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;font-weight:700;
+  color:var(--acc-ink);background:var(--acc);border:1px solid var(--acc);padding:8px 16px}
+.composer-send:hover:not(:disabled){box-shadow:var(--glow);border-color:var(--acc)}
+.composer-send:disabled{opacity:.4}
+.composer-cancel{font-family:var(--mono);font-size:12px;color:var(--ink);background:transparent;border:1px solid var(--line);padding:8px 12px}
+.composer-cancel:hover:not(:disabled){border-color:var(--err);color:var(--err)}
+.composer-status{font-size:12px;color:var(--acc);letter-spacing:.02em}
+
+.composer-close{position:absolute;top:-12px;right:-12px;z-index:2;width:28px;height:28px;border-radius:50%;
+  border:1px solid var(--line);background:var(--bg);color:var(--dim);font-family:var(--mono);font-size:12px;line-height:1;padding:0}
+.composer-close:hover:not(:disabled){color:var(--ink);border-color:var(--ink)}
+
+.composer-suggest{display:flex;align-items:flex-start;gap:12px}
+.composer-try-label{flex:0 0 auto;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em;padding-top:6px}
+.composer-chips{display:flex;flex-wrap:wrap;gap:8px;flex:1 1 auto;min-width:0}
+.composer-chip{font-family:var(--mono);font-size:10px;line-height:1.3;color:var(--dim);background:rgba(255,255,255,.025);
+  border:1px solid var(--line);padding:5px 11px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.composer-chip:hover:not(:disabled){border-color:var(--acc);color:var(--ink);background:rgba(0,255,0,.04)}
+
+/* The collapsed pill: the resting state of the same surface. */
+.composer-pill{display:flex;align-items:center;gap:8px;background:rgba(10,10,12,.92);-webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(20px);border:1px solid var(--line);padding:8px 10px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.composer-pill:hover{border-color:var(--acc)}
+
+/* ── The kernel agent, floating over the graph ───────────────────────────────
+   The geometry is exact, not approximated — 448px card, bottom 24, radius 20,
+   blur(24px), the 6-layer elevation, input-on-top / action-row-below, a 34px
+   circular send, and the turn bubbles stacked in a column ABOVE the card.
+
+   The studio used to expose the agent as a sidebar TAB. That is a different
+   gesture entirely: a tab is a place you go to, while the bar is a
+   collaborator that is simply always there at the bottom of the canvas.
+   Three views over ONE conversation: `bar` (resting pill), `popup` (the
+   composer), `panel` (docked history).
+
+   Two deviations, both deliberate. Colour comes from the glass token family
+   above rather than hardcoded literals, so the light theme is not a dark
+   island. And the motion is CSS keyframes rather than a JS animation library,
+   because this repo ships three runtime dependencies already — a floating
+   card is not worth a fourth. Everything is positioned against the canvas
+   column (its own `position:relative`), not the viewport, so the editor's
+   header stays reachable while the panel is docked. */
+.agent-float{position:absolute;left:50%;transform:translateX(-50%);bottom:24px;z-index:30;
+  font-family:var(--mono);display:flex;flex-direction:column;align-items:stretch;gap:10px;
+  animation:agent-float-in .3s ease-out}
+/* The composer's width lives on the WRAPPER, and the card and the bubble
+   column both fill it. With the width on the card instead, a long
+   reply widens the column, the wrapper centres on THAT, and the card drifts
+   visibly off-centre underneath it. */
+.agent-float.popup{width:448px;max-width:calc(100% - 32px)}
+@keyframes agent-float-in{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* BAR — the resting pill. */
+.agent-pill{display:flex;align-items:center;gap:4px;padding:4px;background:var(--glass);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  border:1px solid var(--glass-line);border-radius:12px;box-shadow:var(--elev)}
+.agent-pill button{display:flex;align-items:center;gap:8px;padding:8px 12px;background:transparent;border:none;
+  border-radius:8px;color:var(--ink);font-size:13px;text-transform:none;letter-spacing:.01em}
+.agent-pill button:hover:not(:disabled){background:var(--glass-fill);border:none}
+.agent-icon{width:30px;height:30px;padding:0!important;justify-content:center;color:var(--glass-dim)!important;font-size:13px}
+.agent-sep{width:1px;height:18px;background:var(--glass-line);flex:none}
+.agent-dot{width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:var(--glow);flex:none}
+.agent-count{color:var(--glass-dim);font-size:11px}
+
+/* POPUP — the floating composer card. */
+.agent-card{width:100%;min-height:120px;display:flex;flex-direction:column;
+  justify-content:space-between;gap:14px;padding:16px;background:var(--glass);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  border:1px solid var(--glass-line);border-radius:20px;box-shadow:var(--elev)}
+.agent-prompt{width:100%;resize:none;border:none;outline:none;background:transparent;color:var(--ink);
+  font-family:var(--mono);font-size:14px;line-height:1.5;letter-spacing:-.01em;padding:0;
+  min-height:24px;max-height:168px;overflow-y:auto}
+.agent-prompt:focus{border:none;outline:none}
+.agent-prompt::placeholder{color:var(--dim)}
+.agent-row{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%}
+.agent-left,.agent-right{display:flex;align-items:center;gap:6px}
+.agent-ghost{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;background:var(--glass-fill);
+  border:none;border-radius:16px;color:var(--glass-dim);font-size:12px;text-transform:none;letter-spacing:.01em}
+.agent-ghost:hover:not(:disabled){background:var(--glass-fill-hi);color:var(--ink);border:none}
+.agent-send{display:flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;flex:none;
+  background:var(--acc);border:none;border-radius:17px;color:var(--acc-ink);box-shadow:var(--glow);
+  transition:transform .15s ease,box-shadow .2s ease}
+.agent-send:hover:not(:disabled){transform:scale(1.06);border:none}
+.agent-send:active:not(:disabled){transform:scale(.95)}
+.agent-send:disabled{opacity:.42}
+
+/* The turn column above the card (and the log inside the docked panel). */
+.agent-column{display:flex;flex-direction:column;gap:12px;max-height:min(48vh,460px);overflow-y:auto;padding:10px;
+  background:var(--glass-soft);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid var(--glass-line);border-radius:16px}
+.agent-bubble{max-width:88%;padding:11px 14px;border-radius:16px;font-size:13px;line-height:1.5;
+  letter-spacing:-.01em;white-space:pre-wrap;animation:agent-bubble-in .22s ease-out}
+.agent-bubble.user{align-self:flex-end;max-width:82%;background:var(--ok-soft);border:1px solid var(--ok-line);color:var(--ink)}
+.agent-bubble.bot{align-self:flex-start;background:var(--glass-fill);border:1px solid var(--glass-line);color:var(--ink)}
+@keyframes agent-bubble-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.agent-hint{align-self:center;max-width:90%;padding:11px 14px;background:var(--glass-fill);
+  border:1px solid var(--glass-line);border-radius:16px;color:var(--dim);font-size:12px;line-height:1.6;white-space:pre-line}
+
+/* Working: the card's border breathes, exactly as the composer's does — the
+   layout must not move while the kernel thinks. */
+.agent-working{animation:agent-pulse 1.9s ease-in-out infinite}
+@keyframes agent-pulse{
+  0%,100%{border-color:var(--ok-line);box-shadow:var(--elev)}
+  50%{border-color:var(--acc);box-shadow:var(--glow),var(--elev)}
+}
+
+/* PANEL — the docked history, on the canvas's left edge. */
+.agent-panel{position:absolute;top:0;left:0;bottom:0;width:min(392px,100%);z-index:31;display:flex;flex-direction:column;
+  background:var(--glass);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  border-right:1px solid var(--glass-line);box-shadow:var(--elev);font-family:var(--mono);
+  animation:agent-panel-in .28s ease-out}
+@keyframes agent-panel-in{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:none}}
+.agent-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;
+  border-bottom:1px solid var(--glass-line)}
+.agent-panel-title{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--ink)}
+.agent-panel-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.agent-panel-composer{border-top:1px solid var(--glass-line);padding:12px;display:flex;align-items:flex-end;gap:8px}
+
+@media (prefers-reduced-motion:reduce){
+  .agent-float,.agent-panel,.agent-bubble{animation:none}
+  .agent-working{animation:none;border-color:var(--acc)}
+}
+.spin-svg{animation:sp .8s linear infinite}
+
+/* The ending card. An authored win/lose has to LAND — before this, reaching one
+   just meant a state with no exits and a rail that said so in small grey text.
+   Over the picture, never replacing it: the last frame of the world you were in
+   is part of the ending. */
+.ending-card{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;
+  min-width:min(420px,86%);max-width:86%;padding:26px 30px;text-align:center;
+  background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+  border:1px solid var(--glass-line);border-radius:2px;box-shadow:var(--elev);
+  font-family:var(--mono);animation:ending-in .5s ease-out}
+.ending-card.win{border-color:var(--ok-line)}
+.ending-card.lose{border-color:var(--err-line)}
+@keyframes ending-in{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.ending-kind{font-size:11px;letter-spacing:.24em;color:var(--dim)}
+.ending-card.win .ending-kind{color:var(--acc)}
+.ending-card.lose .ending-kind{color:var(--err)}
+.ending-title{margin-top:8px;font-size:26px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
+.ending-sub{margin-top:8px;font-size:13px;line-height:1.5;color:var(--dim)}
+@media (prefers-reduced-motion:reduce){.ending-card{animation:none}}
+
+/* The quest panel — a mission's objectives over the picture, top-left, reading
+   the same flag ledger the rail gates on. Never a checklist drawn beside the
+   graph: a tick here means a flag the player is actually carrying. */
+.quest{position:absolute;top:12px;left:12px;z-index:5;max-width:min(340px,44%);padding:10px 12px;
+  background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid var(--glass-line);border-left:2px solid var(--acc);border-radius:2px;
+  box-shadow:var(--elev);font-family:var(--mono);pointer-events:none}
+.quest.complete{border-left-color:var(--ok-line);opacity:.72}
+.quest-title{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:7px}
+.quest-line{display:flex;gap:7px;font-size:12px;line-height:1.5;color:var(--dim)}
+.quest-line.active{color:var(--ink)}
+.quest-line.done{color:var(--dim);text-decoration:line-through;text-decoration-color:var(--ok-line)}
+.quest-tick{flex:none;width:10px;color:var(--acc)}
+.quest-line:not(.done):not(.active) .quest-tick{color:var(--dim)}
+/* A locked beat: on screen, disabled, and saying why. */
+.beat-locked{opacity:.55;border-style:dashed;text-transform:none;letter-spacing:normal}
+
+/* The drive keycaps, lit as they are held. Bottom-left over the picture: out of
+   the way of the beat bar and the anchored chips, both of which live low-centre
+   and low-right. Tokens only — a component never knows the theme. */
+.drivekeys{position:absolute;left:12px;bottom:12px;z-index:6;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 8px;border-radius:8px;background:var(--scrim,rgba(0,0,0,.55));backdrop-filter:blur(2px);pointer-events:none;user-select:none}
+.drivekeys-row{display:flex;gap:3px;justify-content:center}
+.drivekeys-cap{min-width:22px;height:22px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;
+  font-size:10px;line-height:1;border:1px solid var(--line);border-radius:4px;background:var(--surface);color:var(--dim)}
+.drivekeys-cap.wide{min-width:44px}
+.drivekeys-cap.on{border-color:var(--acc);color:var(--acc-ink,var(--bg));background:var(--acc)}
+.drivekeys-doing{min-height:12px;font-size:10px;color:var(--dim);letter-spacing:.02em}

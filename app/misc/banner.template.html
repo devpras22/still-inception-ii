@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Alakazam Studio — banner</title>
+    <!--
+      The README's banner, as a document rather than a string inside a script.
+
+      Every colour here is a var. `scripts/brand.mjs` reads the real palette out
+      of src/theme/styles.css and injects it as :root custom properties before
+      screenshotting this page, so the banner cannot drift from the product's own
+      brand — change a token in the stylesheet and re-run the script.
+
+      The frame on the right is ./play.png, a real world-model session, cropped
+      to its video region by the --crop-* variables the script computes.
+    -->
+    <style>
+      /* The studio's own vendored typeface, same files the app serves. */
+      @font-face {
+        font-family: 'Space Mono';
+        font-weight: 400;
+        src: url('../src/theme/fonts/space-mono-400.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Space Mono';
+        font-weight: 700;
+        src: url('../src/theme/fonts/space-mono-700.woff2') format('woff2');
+      }
+
+      * { box-sizing: border-box; margin: 0; }
+
+      body {
+        width: var(--w);
+        height: var(--h);
+        overflow: hidden;
+        position: relative;
+        background: var(--tok-bg);
+        color: var(--tok-ink);
+        font-family: var(--tok-mono);
+        /* The faint ruled grid every dark surface in the studio wears. */
+        background-image:
+          linear-gradient(var(--tok-grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--tok-grid-line) 1px, transparent 1px);
+        background-size: var(--tok-grid-size) var(--tok-grid-size);
+      }
+
+      /* The frame the studio actually made, bled into the page from the right. */
+      .frame {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: var(--h);
+        width: calc(var(--crop-w) * var(--scale));
+        overflow: hidden;
+      }
+      .frame img {
+        position: absolute;
+        left: calc(var(--crop-x) * var(--scale) * -1);
+        top: calc(var(--crop-y) * var(--scale) * -1);
+        width: calc(var(--source-w) * var(--scale));
+      }
+      /* Reads left to right: solid brand black under the words, the picture
+         itself by the right edge. */
+      .frame::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          var(--tok-bg) 0%,
+          var(--tok-bg) 10%,
+          rgba(0, 0, 0, 0.62) 40%,
+          rgba(0, 0, 0, 0.18) 100%
+        );
+      }
+
+      .copy {
+        position: absolute;
+        left: 88px;
+        top: 0;
+        z-index: 2;
+        height: var(--h);
+        width: 820px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 22px;
+      }
+      .mark { display: flex; align-items: baseline; gap: 18px; }
+      /* The entrance glyph the graph editor marks a world's first state with —
+         the accent used as punctuation, with the same glow. */
+      .caret {
+        color: var(--tok-acc);
+        font-size: 44px;
+        line-height: 1;
+        text-shadow: 0 0 18px var(--tok-acc);
+      }
+      .name {
+        font-weight: 700;
+        font-size: 66px;
+        letter-spacing: -1px;
+        line-height: 1;
+        color: var(--tok-brand-ink);
+      }
+      .name b {
+        font-weight: 700;
+        color: var(--tok-acc);
+        text-shadow: 0 0 22px rgba(0, 255, 0, 0.45);
+      }
+      .tag { font-size: 23px; line-height: 1.5; max-width: 640px; }
+      .tag i { font-style: normal; color: var(--tok-dim); }
+      .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+      .chip {
+        border: 1px solid var(--tok-line);
+        padding: 7px 13px;
+        font-size: 13px;
+        letter-spacing: 0.5px;
+        color: var(--tok-dim);
+      }
+      .chip.on {
+        border-color: var(--tok-acc);
+        color: var(--tok-acc);
+        box-shadow: 0 0 12px -2px rgba(0, 255, 0, 0.35);
+      }
+      .foot {
+        position: absolute;
+        left: 88px;
+        bottom: 38px;
+        z-index: 2;
+        font-size: 13px;
+        letter-spacing: 1px;
+        color: var(--tok-dim);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="frame"><img src="./play.png" alt="" /></div>
+
+    <div class="copy">
+      <div class="mark">
+        <span class="caret">&#9654;</span>
+        <span class="name">Alakazam <b>Studio</b></span>
+      </div>
+      <div class="tag">
+        Describe a world in a sentence, edit it as a state graph,
+        <i>play it inside a world model.</i>
+      </div>
+      <div class="chips">
+        <span class="chip on">open source</span>
+        <span class="chip">bring your own world model</span>
+        <span class="chip">bring your own LLM</span>
+        <span class="chip">no server, no account</span>
+      </div>
+    </div>
+
+    <div class="foot">alakazam.gg</div>
+  </body>
+</html>

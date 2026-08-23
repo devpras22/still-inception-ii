@@ -1,0 +1,113 @@
+{
+  "name": "STILL",
+  "logline": "After the funeral, a family opens the shoebox of photographs. Each one you pick up comes alive — a memory you stand inside. The people we love never really leave; they just stop moving. Tonight, they don't have to.",
+  "dedication": "for Marion, 1946–2026",
+  "family": {
+    "grandma": "Marion — the one the photos are about. Never still, in any of them.",
+    "daughter": "Ellen — her daughter, fifties. Warm, wry, does most of the talking.",
+    "grandson": "Sam — fourteen, trying not to feel, failing.",
+    "granddaughter": "Maya — nine, asking the questions nobody wants to answer."
+  },
+  "frame": {
+    "state": "living_room",
+    "prompt": "A living room the evening after a funeral, warm lamplight. A woman in her fifties in a dark cardigan sits on a worn sofa beside a low coffee table with an open shoebox of old photographs; a fourteen-year-old boy and a nine-year-old girl lean over the box. Behind her the house is full of relatives: an aunt with a teacup tray, an uncle in a dark suit by the kitchen doorway, coats piled on a chair.",
+    "narration": "Will you look at this. A whole shoebox of her photographs — she kept every single one. Sam, Maya — come sit. Go on, pick one up. I want to see it again."
+  },
+  "memories": [
+    {
+      "id": "mem_picnic",
+      "label": "in the shoebox — the lake picnic, 1986",
+      "hint": "the year dad set fire to the barbecue",
+      "photo_prompt": "A faded late-1980s family photograph, slightly overexposed with warm film grain. A lakeside picnic on a checkered blanket: a grandfather in a ridiculous wide-brimmed hat laughing at a smoking portable barbecue, a grandmother mid-laugh holding a paper plate, two children chasing each other by the water. Kodak colors, slight motion blur, developed-print texture with a white border.",
+      "alive_prompt": "A lakeside picnic on a summer afternoon. A woman of forty in a sundress sits on a checkered blanket beside a tall man in a wide-brim straw hat, a small smoking barbecue and a plate of sausages between them, a jug of lemonade on the blanket. Two children play at the water's edge, tall grass along the shore.",
+      "hud": "W / S — walk the shore",
+      "voice": "The hat. He wore that hat for twenty years. Mom said the sausages tasted like charcoal smoke until Y2K.",
+      "in_world": "Listen — you can still hear the water. I always thought the wind would take that hat off him one day.",
+      "return_label": "put it back in the box",
+      "return_line": "God, I'd forgotten the hat. Go on — there's more in there."
+    },
+    {
+      "id": "mem_bike",
+      "label": "in the shoebox — the training wheels, 2022",
+      "hint": "the day they came off",
+      "photo_prompt": "A recent photograph with a phone-camera look, bright summer light. A suburban sidewalk in summer: a grandmother runs bent over behind a small bicycle, one hand on the seat, a helmeted child pedals hard with a determined face, motion blur in her running legs. Developed-print texture, white border, sun flare.",
+      "alive_prompt": "A quiet suburban street in low golden light. A small girl in a bike helmet rides a small blue bicycle along the sidewalk, a silver-haired woman in her seventies a few steps behind with her hands half-raised. Parked cars line the curb, a dog lies on a porch, lawns on either side.",
+      "hud": "W / S — pedal. she's right behind you",
+      "voice": "She let go. That was the whole trick, Maya — she just let go, and then you screamed so loud the neighbors came out.",
+      "in_world": "That was the summer she decided you were ready. Go on — ride.",
+      "return_label": "put it back in the box",
+      "return_line": "She let go on purpose, I swear it. Go on, take another."
+    },
+    {
+      "id": "mem_kitchen",
+      "label": "in the shoebox — the kitchen, every December",
+      "hint": "flour everywhere, radio on",
+      "photo_prompt": "A faded 1990s family photograph, warm indoor flash look with film grain. A cozy kitchen at Christmas: a grandmother with flour on her hands and one cheek mock-scowling, a young daughter laughing behind her with an icing bag, cookie trays and flour dust everywhere, tinsel and a small radio on the counter. Developed-print texture, white border.",
+      "alive_prompt": "A warm kitchen at Christmas. A woman of forty with flour on one cheek stands at the counter over rolled cookie dough, a tray of cookies and an icing bag beside her, a small radio on the counter, tinsel along the shelf. A teenage girl stands behind her with one hand on a cookie tin. A kettle sits on the stove.",
+      "hud": "W / S — move around the kitchen",
+      "voice": "Three hundred cookies a year. Every year. She gave the recipe to no one. Sam, check the tin — I hid one from her in the car.",
+      "in_world": "Smell that? Three hundred cookies, Maya. The whole street got some.",
+      "return_label": "put it back in the box",
+      "return_line": "I can still smell it from here. Keep going — what else did she keep?"
+    },
+    {
+      "id": "mem_lake78",
+      "label": "above the piano — the lake at dawn, 1978",
+      "hint": "before any of us",
+      "photo_prompt": "An old 1970s photograph, faded with age, orange-shifted colors and grain. Misty dawn on a lake: a young man and a young woman in denim sit close on a wooden dock sharing one fishing rod, the girl laughing, mist on the water behind them. Vintage developed print, slight yellowing, white border.",
+      "alive_prompt": "A wooden dock on a still lake at dawn, mist over the water turning gold. A young woman in denim sits close beside a young man in denim, one fishing rod across their knees, a tackle box at their feet. Reeds along the shore, a loon far out on the water.",
+      "hud": "W / S — the dock is yours",
+      "voice": "Before any of us. One rod between the two of them, and I swear neither one ever wanted a fish.",
+      "in_world": "That's them. Look how still the water is.",
+      "return_label": "put it back on the wall",
+      "return_line": "And she kept that one up there all those years."
+    },
+    {
+      "id": "mem_family",
+      "label": "on the bookshelf — everyone, last November",
+      "hint": "the rare photo where everyone is looking",
+      "photo_prompt": "A recent photograph from last Thanksgiving, phone-camera look but printed. Three generations crowded around a dinner table: an elderly grandmother at the centre mid-laugh, her daughter beside her, a teenage boy and a small girl leaning in, everyone miraculously looking at the camera at once, candles and turkey and chaos. Warm indoor light, developed-print texture, white border.",
+      "alive_prompt": "A candlelit Thanksgiving dinner table. An elderly grandmother with a silver bob sits at the centre mid-laugh, a glass raised in one hand, the small girl beside her leaning into her arm. A woman in her fifties and a teenage boy sit across the table, plates and candles and a turkey between them.",
+      "hud": "W / S — move around the table",
+      "voice": "Nobody knows who got us all to look at the same time. Look at her. She knew. Somehow she always knew it was the last one.",
+      "in_world": "All of us here, everyone looking — even Sam. She wanted you to see this one.",
+      "return_label": "put it down — it's the last one",
+      "final": true,
+      "return_line": "She's still here. As long as we keep looking."
+    }
+  ],
+  "staging": {
+    "reveal_state": "room_open",
+    "reveal_prompt": "A living room in warm evening lamplight. A woman in her fifties in a dark cardigan sits on a sofa beside a coffee table with a closed shoebox. A large faded photograph of a misty lake hangs on the wall above the piano, a small framed family photograph stands on the bookshelf. A fourteen-year-old boy and a nine-year-old girl sit on the rug looking around at the walls.",
+    "reveal_narration": "Well… that's the box empty. But look where she is — everywhere. That one above the piano is her and Dad, summer of '78. And there's all of us on the bookshelf, last November. Go on, look.",
+    "box_done_label": "the shoebox is empty",
+    "grants": {
+      "mem_picnic": "seen_picnic",
+      "mem_bike": "seen_bike",
+      "mem_kitchen": "seen_kitchen",
+      "mem_lake78": "seen_wall"
+    }
+  },
+  "ending": {
+    "state": "the_album",
+    "title": "STILL",
+    "subtitle": "The people we love never really leave. They just stop moving. Tonight, they didn't have to.",
+    "prompt": "A living room late at night, one low golden lamp. Old photographs lie in careful rows across the coffee table beside a closed shoebox and two teacups. A large lake photograph hangs above the piano, a small family frame stands on the bookshelf.",
+    "voice": "She's still here. As long as we keep looking."
+  },
+  "voice_cast": {
+    "ellen": {
+      "voice": "coral",
+      "instructions": "A woman in her fifties, the day after her mother's funeral, in a house full of relatives. Warm, a little hoarse, gently wry — she laughs mid-sentence once and keeps going. Calling her kids close to the table, speaking over the soft murmur of the gathering. Intimate, close-mic, never performative. Grief is under the words, not in them."
+    },
+    "sam": {
+      "voice": "onyx_young",
+      "instructions": "A fourteen-year-old boy trying to sound casual about his grandmother. Quiet, brief, half-swallowed warmth. One sentence at a time."
+    },
+    "maya": {
+      "voice": "nova",
+      "instructions": "A nine-year-old girl, curious and bright, in a quiet room. Quick, light, innocent questions."
+    }
+  },
+  "music": "soft solo piano, slow, sentimental, licensed CC — fades under voices"
+}

@@ -1,0 +1,21 @@
+// Domain types re-exported from the API client so components import from one place.
+export type {
+  SMWorld,
+  SMScene,
+  SMState,
+  SMEvent,
+  SMEventAnchor,
+  SMEventPhase,
+  SMLandWhen,
+  SMObjective,
+  SMMission,
+  LayerPair,
+  WorldListItem,
+  WorldList,
+  Diagnostic,
+  GraphWriteResult,
+  VersionNode,
+  Hotspot,
+  PublicOp,
+  ApiError,
+} from './api'

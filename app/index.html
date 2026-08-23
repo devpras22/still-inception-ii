@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alakazam Creator Studio</title>
+    <!-- Pre-React theme: stamp data-theme before first paint so a light-theme
+         visit never flashes dark. Same precedence as the app (URL wins, then
+         the persisted choice, then dark) and the same attribute applyTheme()
+         writes — this script and applyTheme are the only two writers. -->
+    <script>
+      try {
+        var m = location.search.match(/[?&]theme=(light|dark)\b/)
+        var t = m ? m[1] : localStorage.getItem('alakazam-studio:theme:v1')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
+    <style>
+      html, body, #root { margin: 0; height: 100%; background: #000 }
+      html[data-theme='light'], html[data-theme='light'] body, html[data-theme='light'] #root { background: #f4f6f9 }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

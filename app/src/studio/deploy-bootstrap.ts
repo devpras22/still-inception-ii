@@ -1,0 +1,69 @@
+/**
+ * THE DEPLOYED DEMO BOOTSTRAP — judges press ▶ begin, nothing else.
+ *
+ * A studio clone serves people who configure their own keys in Settings. A
+ * deployed link serves strangers who will configure nothing. This module is
+ * the difference: before the app mounts, it asks the deployment's own
+ * /api/config whether this IS a deployed build, and if so writes the provider
+ * configuration the demo needs —
+ *
+ *   · the Reactor key, fetched at runtime from the server and held only in
+ *     this browser's localStorage (Vercel env → /api/config → localStorage;
+ *     nothing is baked into the bundle),
+ *   · the hosted world store, pointed at this origin's /api so the STILL
+ *     world record is served by the deployment itself,
+ *   · the LLM through /api/llm, so the improvised homecoming lines cost the
+ *     judge no key of their own,
+ *   · the voice bridge at /api/voice, which holds the fish.audio key
+ *     server-side.
+ *
+ * In a dev clone /api/config does not exist, the fetch fails fast, and none
+ * of this runs — local Settings stay the single source of truth.
+ */
+
+/** The store key the provider registry reads at mount (see registry.ts). */
+const PROVIDERS_KEY = 'alakazam-studio:providers:v1'
+
+interface DeployConfig {
+  deployed: boolean
+  reactorKey?: string
+}
+
+async function fetchDeployConfig(): Promise<DeployConfig | null> {
+  try {
+    const res = await fetch('/api/config', { headers: { Accept: 'application/json' } })
+    if (!res.ok) return null
+    const cfg = (await res.json()) as DeployConfig
+    return cfg?.deployed ? cfg : null
+  } catch {
+    return null
+  }
+}
+
+export async function bootstrapDeployedDemo(): Promise<void> {
+  const cfg = await fetchDeployConfig()
+  if (!cfg) return
+  const reactorKey = (cfg.reactorKey ?? '').trim()
+  if (!reactorKey) return // a deployment without its key configured stays a plain studio
+
+  localStorage.setItem(PROVIDERS_KEY, JSON.stringify({
+    world: {
+      // Reactor streams the world models straight from the browser; the key
+      // arrives per-session from /api/config, never baked into the bundle.
+      active: 'reactor',
+      reactor: { apiKey: reactorKey, mode: 'adventure' },
+      websocket: { url: '', apiKey: '', protocol: 'raw' },
+      // A non-empty key selects the HOSTED store — here this origin's /api,
+      // which serves the STILL record and doubles as the voice bridge base.
+      alakazam: { apiBase: '/api', embedHost: '', apiKey: 'still-demo' },
+    },
+    llm: {
+      active: 'openai',
+      endpoints: {
+        openai: { baseUrl: '/api/llm', apiKey: 'served', model: 'gpt-4o-mini' },
+      },
+    },
+    image: { geminiKey: '', model: 'gemini-3-pro-image' },
+    vision: { endpoint: 'local', apiKey: '', localUrl: '' },
+  }))
+}
