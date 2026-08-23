@@ -557,8 +557,11 @@ iframe.embed{width:100%;height:100%;border:0;background:var(--media-bg);border-r
 /* Story mode: the caption is the film's subtitle — BIG, at the foot of the
    frame, above the zoom door (the homecoming lines speak over a connecting
    world, and a voice over a silent boot needs its words on screen). */
-.narration-story{bottom:84px;top:auto;font-size:24px;line-height:1.45;
-  max-width:min(920px,92%);padding:14px 26px;z-index:9;font-weight:500}
+/* The caption scales with the SCREEN, not just the drama: a phone gets a
+   readable subtitle, a desktop gets the big film line — one clamp, no
+   breakpoint to drift out of date. */
+.narration-story{bottom:84px;top:auto;font-size:clamp(14px,3.4vw,24px);line-height:1.45;
+  max-width:min(920px,92%);padding:clamp(10px,2vw,14px) clamp(14px,3vw,26px);z-index:9;font-weight:500}
 /* The boot/door status — the only thing on screen during a world's boot. */
 .boot-status{display:flex;align-items:center;gap:10px;font-size:22px;color:var(--caption-ink);
   text-shadow:0 2px 12px rgba(0,0,0,.8)}
