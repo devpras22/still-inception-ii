@@ -703,6 +703,15 @@ export function PlayModal({
           setTrail(opening.stateId ? [opening.stateId] : [])
         }
 
+        // A CHOICE FILM DOES NOT OPEN ITS SESSION UNTIL BEGIN. The title card
+        // is free; the GPU is not — a world model is metered from the first
+        // frame, so nobody still reading the card is billing anything. begin
+        // flips `begun`, this effect re-runs, and the connect happens then.
+        if (opening?.world?.['choiceMode'] === true && !begun) {
+          setStatus('')
+          return
+        }
+
         // Capacity is a wave, not a verdict: a 429 "no available capacity" at
         // boot is usually free again seconds later, and surfacing it as a dead
         // error makes a playable world read as broken. Two quiet retries first.
@@ -761,7 +770,23 @@ export function PlayModal({
       sessionRef.current = null
       if (s) void s.dispose()
     }
-  }, [providers, actWorldId, startState, variant, campaignId])
+  }, [providers, actWorldId, startState, variant, campaignId, begun])
+
+  /**
+   * THE METER STOPS WHEN THE PAGE DOES. Closing the tab, or reloading it, does
+   * not run the boot effect's cleanup — the socket just vanishes and the GPU
+   * session sits server-side until its own timeout, billing all the while.
+   * `pagehide` fires on both, so the session is terminated explicitly there.
+   */
+  useEffect(() => {
+    const stop = (): void => {
+      const s = sessionRef.current
+      sessionRef.current = null
+      if (s) void s.dispose().catch(() => {})
+    }
+    window.addEventListener('pagehide', stop)
+    return () => window.removeEventListener('pagehide', stop)
+  }, [])
 
   /**
    * RE-SEED — tear the session down and boot a fresh one on a given prompt and
@@ -2233,6 +2258,22 @@ export function PlayModal({
                     onClick={() => setShowInspector(true)}
                     title="show the live graph + prompt"
                     text="▦ inspector"
+                  />
+                )}
+                {/* THE CINEMA'S ONE EXIT. A deployed film has no studio to
+                    return to, but it must still be stoppable: this ends the
+                    metered session and stands back at the title card. */}
+                {choiceMode && locked && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      const s = sessionRef.current
+                      sessionRef.current = null
+                      if (s) void s.dispose().catch(() => {})
+                      window.location.reload()
+                    }}
+                    title="end the session and return to the title card"
+                    text="■ stop"
                   />
                 )}
                 {/* A choice film has no sound state to flip: the first press is
