@@ -11,9 +11,10 @@ export default async function voice(req: DemoRequest, res: DemoResponse): Promis
   if (req.method !== 'POST') { res.status(405).json({ detail: 'POST only' }); return }
   const key = (process.env['FISH_AUDIO_API_KEY'] ?? '').trim()
   if (!key) { res.status(503).json({ detail: 'voice not configured' }); return }
-  const body = (req.body ?? {}) as { text?: unknown; reference_id?: unknown }
+  const body = (req.body ?? {}) as { text?: unknown; reference_id?: unknown; temperature?: unknown }
   const text = typeof body.text === 'string' ? body.text : ''
   const referenceId = typeof body.reference_id === 'string' ? body.reference_id : undefined
+  const temperature = typeof body.temperature === 'number' && body.temperature >= 0 && body.temperature <= 1 ? body.temperature : undefined
   if (!text.trim()) { res.status(400).json({ detail: 'text required' }); return }
 
   try {
@@ -22,6 +23,7 @@ export default async function voice(req: DemoRequest, res: DemoResponse): Promis
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
         text, format: 'mp3', normalize: true, latency: 'normal',
+        ...(temperature !== undefined ? { temperature } : {}),
         ...(referenceId ? { reference_id: referenceId } : {}),
       }),
     })

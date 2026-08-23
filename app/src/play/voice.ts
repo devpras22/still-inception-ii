@@ -18,6 +18,10 @@ import { llmEndpoint } from '../provider/registry'
 import type { ProviderConfig } from '../provider/types'
 
 const TTS_MODEL = 'gpt-4o-mini-tts'
+/** fish.audio's one expressiveness knob — their docs: "Higher is more varied,
+ *  lower is more consistent." Default is 0.7; Ellen reads noticeably flatter
+ *  than her casting brief, so every line goes out at the top of the range. */
+const FISH_TEMPERATURE = 0.9
 /** Low, worn, unhurried — the fallback voice of a room that has seen a thing or two. */
 const TTS_VOICE = 'onyx'
 
@@ -50,7 +54,7 @@ async function speakViaBridge(cfg: ProviderConfig, line: string, fishVoice?: str
     const res = await fetch(`${base}/voice`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: line, ...(fishVoice ? { reference_id: fishVoice } : {}) }),
+      body: JSON.stringify({ text: line, temperature: FISH_TEMPERATURE, ...(fishVoice ? { reference_id: fishVoice } : {}) }),
     })
     if (!res.ok) {
       console.warn(`[voice] bridge /voice → HTTP ${res.status}`, (await res.text()).slice(0, 160))
